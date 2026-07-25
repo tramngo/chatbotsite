@@ -1,287 +1,158 @@
+<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wren — always-on receptionist for small businesses</title>
+<title>Wren · TBN Strategy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --ink:     #14243A;  /* deep navy — owner panel, primary text */
-    --slate:   #4A6483;  /* mid blue-grey — secondary text, rules */
-    --blue:    #3F7CB8;  /* dusty action blue */
-    --mist:    #DDE5EE;  /* pale blue-grey — assistant bubbles */
-    --greige:  #F2F0EC;  /* warm off-grey — the page's warmth */
-    --brass:   #C08A4A;  /* single warm accent — signal only */
-    --paper:   #FBFAF8;
+    --ink:    #14243A;   /* deep navy */
+    --slate:  #4A6483;   /* blue-grey, secondary text */
+    --blue:   #3F7CB8;   /* action blue */
+    --mist:   #DDE5EE;   /* assistant bubbles */
+    --greige: #F2F0EC;   /* warm off-grey */
+    --brass:  #C08A4A;   /* single warm accent */
+    --paper:  #FFFFFF;
 
-    --display: "Fraunces", Georgia, serif;
-    --body:    "Karla", system-ui, sans-serif;
-    --mono:    "IBM Plex Mono", ui-monospace, monospace;
+    --display:"Fraunces", Georgia, serif;
+    --body:   "Karla", system-ui, sans-serif;
   }
 
   *{ box-sizing:border-box; margin:0; padding:0 }
 
+  html,body{ height:100% }
   body{
     font-family:var(--body);
     color:var(--ink);
-    background:var(--greige);
+    background:transparent;                 /* lets the host page show through */
+    display:flex; align-items:center; justify-content:center;
+    padding:12px;
     -webkit-font-smoothing:antialiased;
   }
 
-  /* ---------- top strip ---------- */
-  .strip{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:16px; padding:10px 20px;
-    background:var(--ink); color:var(--mist);
-    font-size:12px; letter-spacing:.06em; text-transform:uppercase;
-  }
-  .strip strong{ font-weight:700; color:#fff; letter-spacing:.02em }
-  .strip button{
-    font-family:var(--body); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
-    color:var(--mist); background:none; border:1px solid rgba(221,229,238,.35);
-    border-radius:999px; padding:5px 12px; cursor:pointer;
-  }
-  .strip button:hover{ background:rgba(221,229,238,.12) }
-
-  /* ---------- the two-sided stage ---------- */
-  .stage{ display:grid; grid-template-columns:1fr 380px; min-height:calc(100vh - 41px) }
-
-  /* ===== LEFT: what the customer sees ===== */
-  .site{ background:var(--paper); padding:56px 48px 40px; position:relative; overflow:hidden }
-
-  .brandline{ display:flex; align-items:baseline; gap:14px; margin-bottom:64px }
-  .brandmark{ font-family:var(--display); font-size:21px; font-weight:600; letter-spacing:-.01em }
-  .nav{ display:flex; gap:20px; margin-left:auto; font-size:13px; color:var(--slate) }
-
-  .hero h1{
-    font-family:var(--display); font-weight:400; font-size:clamp(30px,4vw,50px);
-    line-height:1.08; letter-spacing:-.02em; max-width:11ch;
-  }
-  .hero h1 em{ font-style:italic; color:var(--blue) }
-  .hero p{ margin-top:20px; max-width:38ch; color:var(--slate); font-size:16px; line-height:1.6 }
-  .credentials{
-    margin-top:36px; padding-top:18px; border-top:1px solid var(--mist);
-    display:flex; gap:28px; font-family:var(--mono); font-size:11px; color:var(--slate);
-    max-width:520px; flex-wrap:wrap;
-  }
-  .credentials b{ display:block; font-family:var(--body); font-size:17px; color:var(--ink); font-weight:700 }
-
-  .closed{
-    position:absolute; right:48px; top:120px;
-    font-family:var(--mono); font-size:11px; color:var(--slate);
-    text-align:right; line-height:2;
-  }
-  .closed .dot{ display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--brass); margin-right:6px }
-
-  /* ---------- the widget ---------- */
-  .widget{
-    position:absolute; right:48px; bottom:40px; width:370px;
-    background:#fff; border-radius:16px;
+  /* ---------- the card ---------- */
+  .card{
+    width:100%; max-width:440px; height:100%; max-height:720px;
+    display:flex; flex-direction:column;
+    background:var(--paper);
     border:1px solid var(--mist);
-    box-shadow:0 24px 50px -22px rgba(20,36,58,.30);
-    display:flex; flex-direction:column; overflow:hidden;
+    border-radius:18px;
+    box-shadow:0 20px 44px -24px rgba(20,36,58,.35);
+    overflow:hidden;
   }
-  .w-head{ display:flex; align-items:center; gap:11px; padding:14px 16px; border-bottom:1px solid var(--mist) }
+
+  /* ---------- header ---------- */
+  .head{
+    display:flex; align-items:center; gap:12px;
+    padding:16px 18px;
+    background:var(--ink); color:#fff;
+  }
   .avatar{
-    width:34px; height:34px; border-radius:50%; flex:none;
+    width:40px; height:40px; border-radius:50%; flex:none;
     background:var(--blue); color:#fff;
-    font-family:var(--display); font-size:15px; font-weight:600;
+    font-family:var(--display); font-size:18px; font-weight:600;
     display:grid; place-items:center;
   }
-  .w-head .who{ font-weight:700; font-size:14px }
-  .w-head .status{ font-size:11.5px; color:var(--slate); display:flex; align-items:center; gap:5px }
-  .pulse{ width:6px; height:6px; border-radius:50%; background:#3F9A6B }
+  .head .who{ font-weight:700; font-size:15px; line-height:1.2 }
+  .head .sub{ font-size:12px; color:#9FB3CC; display:flex; align-items:center; gap:6px; margin-top:2px }
+  .pulse{ width:7px; height:7px; border-radius:50%; background:#57B98A; box-shadow:0 0 0 0 rgba(87,185,138,.6); animation:ping 2s infinite }
+  @keyframes ping{ 0%{ box-shadow:0 0 0 0 rgba(87,185,138,.5) } 70%{ box-shadow:0 0 0 6px rgba(87,185,138,0) } 100%{ box-shadow:0 0 0 0 rgba(87,185,138,0) } }
+  .brandtag{ margin-left:auto; font-family:var(--display); font-size:13px; color:#C7D4E4; letter-spacing:.01em }
 
+  /* ---------- message log ---------- */
   .log{
-    padding:16px; display:flex; flex-direction:column; gap:10px;
-    height:340px; overflow-y:auto; scroll-behavior:smooth;
+    flex:1; overflow-y:auto; scroll-behavior:smooth;
+    padding:18px; display:flex; flex-direction:column; gap:11px;
+    background:var(--greige);
   }
-  .msg{ max-width:84%; padding:10px 13px; font-size:14px; line-height:1.5; animation:rise .28s ease-out both }
-  .msg.bot{ background:var(--mist); color:var(--ink); border-radius:14px 14px 14px 4px; align-self:flex-start }
-  .msg.me{ background:var(--blue); color:#fff; border-radius:14px 14px 4px 14px; align-self:flex-end }
+  .msg{ max-width:86%; padding:11px 14px; font-size:14.5px; line-height:1.5; animation:rise .28s ease-out both }
+  .msg.bot{ background:#fff; color:var(--ink); border:1px solid var(--mist); border-radius:15px 15px 15px 5px; align-self:flex-start }
+  .msg.me{ background:var(--blue); color:#fff; border-radius:15px 15px 5px 15px; align-self:flex-end }
   @keyframes rise{ from{ opacity:0; transform:translateY(6px) } to{ opacity:1; transform:none } }
 
-  .typing{ display:flex; gap:4px; align-self:flex-start; background:var(--mist); padding:13px; border-radius:14px 14px 14px 4px }
-  .typing i{ width:5px; height:5px; border-radius:50%; background:var(--slate); animation:blink 1.2s infinite }
+  .typing{ display:flex; gap:4px; align-self:flex-start; background:#fff; border:1px solid var(--mist); padding:14px; border-radius:15px 15px 15px 5px }
+  .typing i{ width:6px; height:6px; border-radius:50%; background:var(--slate); animation:blink 1.2s infinite }
   .typing i:nth-child(2){ animation-delay:.2s } .typing i:nth-child(3){ animation-delay:.4s }
   @keyframes blink{ 0%,60%,100%{ opacity:.3 } 30%{ opacity:1 } }
 
-  .chips{ display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 12px }
+  /* booking confirmation */
+  .booked{
+    align-self:stretch; margin-top:2px;
+    border:1px solid var(--brass); border-radius:14px;
+    background:rgba(192,138,74,.10);
+    padding:14px 16px; font-size:13.5px; line-height:1.5; color:var(--ink);
+    animation:rise .3s ease-out both;
+  }
+  .booked .k{ font-family:var(--body); font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--brass); display:block; margin-bottom:6px }
+  .booked b{ display:block; font-size:15px; margin-bottom:3px }
+
+  /* ---------- suggested replies ---------- */
+  .chips{ display:flex; flex-wrap:wrap; gap:7px; padding:12px 18px 0 }
   .chip{
-    font-family:var(--body); font-size:12.5px; color:var(--blue);
+    font-family:var(--body); font-size:13px; color:var(--blue);
     background:#fff; border:1px solid var(--mist); border-radius:999px;
-    padding:6px 12px; cursor:pointer;
+    padding:7px 13px; cursor:pointer; transition:.15s;
   }
   .chip:hover{ border-color:var(--blue); background:#F5F9FD }
 
-  .composer{ display:flex; gap:8px; padding:12px 12px 12px 16px; border-top:1px solid var(--mist) }
+  /* ---------- composer ---------- */
+  .composer{ display:flex; gap:8px; align-items:center; padding:14px 14px 14px 18px; border-top:1px solid var(--mist); background:#fff }
   .composer input{
-    flex:1; border:none; outline:none; font-family:var(--body); font-size:14px; color:var(--ink); background:none;
+    flex:1; border:none; outline:none; font-family:var(--body); font-size:14.5px; color:var(--ink); background:none;
   }
   .composer input::placeholder{ color:#9AA9BC }
   .send{
-    width:34px; height:34px; flex:none; border:none; border-radius:9px;
-    background:var(--blue); color:#fff; cursor:pointer; font-size:15px;
+    width:38px; height:38px; flex:none; border:none; border-radius:10px;
+    background:var(--blue); color:#fff; cursor:pointer; font-size:16px; transition:.15s;
   }
+  .send:hover{ background:#356BA0 }
   .send:disabled{ background:var(--mist); color:var(--slate); cursor:default }
 
-  /* ===== RIGHT: what the owner sees ===== */
-  .owner{ background:var(--ink); color:var(--mist); padding:28px 26px; display:flex; flex-direction:column; gap:22px }
+  .foot{ text-align:center; font-size:10.5px; color:#9AA9BC; padding:0 0 10px; background:#fff }
 
-  .o-head{ display:flex; align-items:baseline; justify-content:space-between }
-  .o-head h2{ font-family:var(--display); font-weight:400; font-size:19px; color:#fff }
-  .clock{ font-family:var(--mono); font-size:11px; color:#7E93AC }
-
-  .o-sub{ font-size:12.5px; line-height:1.6; color:#8FA3BB; margin-top:-14px }
-
-  .card{ border:1px solid #26405F; border-radius:12px; background:#1A2E49 }
-  .card h3{
-    font-family:var(--mono); font-size:10px; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
-    color:#7E93AC; padding:12px 14px 10px; border-bottom:1px solid #26405F;
-  }
-  .row{ display:flex; gap:12px; padding:10px 14px; border-bottom:1px solid rgba(38,64,95,.6); font-size:13px }
-  .row:last-child{ border-bottom:none }
-  .row .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#7E93AC; width:74px; flex:none; padding-top:2px }
-  .row .v{ color:#DDE5EE; line-height:1.45 }
-  .row .v.empty{ color:#41597A }
-  .row.filled .v{ animation:catch .7s ease-out }
-  @keyframes catch{ 0%{ color:var(--brass) } 100%{ color:#DDE5EE } }
-
-  .temp{ padding:14px }
-  .temp .bars{ display:flex; gap:4px; margin:9px 0 8px }
-  .temp .bars span{ height:5px; flex:1; border-radius:2px; background:#26405F; transition:background .5s }
-  .temp .bars span.on{ background:var(--brass) }
-  .temp .label{ font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#7E93AC }
-  .temp .why{ font-size:12.5px; color:#8FA3BB; line-height:1.5 }
-
-  .booked{
-    border:1px solid var(--brass); border-radius:12px; padding:14px;
-    background:rgba(192,138,74,.10); font-size:13px; line-height:1.5;
-  }
-  .booked .k{ font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--brass); display:block; margin-bottom:6px }
-  .booked b{ color:#fff; font-size:15px; display:block; margin-bottom:4px }
-  .booked small{ color:#8FA3BB; font-size:11.5px }
-
-  .foot{ margin-top:auto; font-size:11.5px; color:#5F7590; line-height:1.6; border-top:1px solid #26405F; padding-top:14px }
-
-  /* ---------- responsive ---------- */
-  @media (max-width: 980px){
-    .stage{ grid-template-columns:1fr }
-    .site{ padding:32px 22px 22px }
-    .closed{ position:static; text-align:left; margin-top:26px }
-    .widget{ position:static; width:100%; margin-top:28px; box-shadow:none }
-    .log{ height:300px }
-    .brandline{ margin-bottom:36px }
-  }
   @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important } }
   :focus-visible{ outline:2px solid var(--blue); outline-offset:2px }
+  .sr-only{ position:absolute; left:-9999px }
 </style>
 
-<div class="strip">
-  <div><strong>Wren</strong> &nbsp;· &nbsp;live demo — talk to the receptionist on the left, watch the owner's screen on the right</div>
-  <button id="reset">Start over</button>
-</div>
-
-<div class="stage">
-
-  <!-- ============ CUSTOMER SIDE ============ -->
-  <section class="site">
-    <div class="brandline">
-      <div class="brandmark">Hollis &amp; Daughters</div>
-      <nav class="nav"><span>Kitchens</span><span>Baths</span><span>Our work</span><span>About</span></nav>
+<div class="card" role="region" aria-label="Chat with Wren from TBN Strategy">
+  <div class="head">
+    <div class="avatar">W</div>
+    <div>
+      <div class="who">Wren</div>
+      <div class="sub"><span class="pulse"></span>Online now</div>
     </div>
+    <div class="brandtag">TBN Strategy</div>
+  </div>
 
-    <div class="hero">
-      <h1>The kitchen you keep <em>redrawing</em> on napkins.</h1>
-      <p>Family-run remodeling in the North End since 1994. We handle design, permits, and the parts nobody warns you about.</p>
-      <div class="credentials">
-        <div><b>31 yrs</b>in business</div>
-        <div><b>400+</b>homes finished</div>
-        <div><b>Licensed</b>&amp; insured</div>
-      </div>
-    </div>
+  <div class="log" id="log" aria-live="polite"></div>
+  <div class="chips" id="chips"></div>
 
-    <div class="closed">
-      <div><span class="dot"></span>Office closed · reopens 8:00 AM</div>
-      <div>Wren is answering</div>
-    </div>
-
-    <!-- the product -->
-    <div class="widget">
-      <div class="w-head">
-        <div class="avatar">W</div>
-        <div>
-          <div class="who">Wren</div>
-          <div class="status"><span class="pulse"></span>Answering for Hollis &amp; Daughters</div>
-        </div>
-      </div>
-
-      <div class="log" id="log" aria-live="polite"></div>
-      <div class="chips" id="chips"></div>
-
-      <div class="composer">
-        <label for="input" class="sr-only" style="position:absolute;left:-9999px">Message Wren</label>
-        <input id="input" placeholder="Ask about your project…" autocomplete="off">
-        <button class="send" id="send" aria-label="Send message">↑</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ OWNER SIDE ============ -->
-  <aside class="owner">
-    <div class="o-head">
-      <h2>Ada's screen</h2>
-      <div class="clock" id="clock">11:47 PM</div>
-    </div>
-    <p class="o-sub">Ada owns the business. She is asleep. This is what she'll wake up to.</p>
-
-    <div class="card">
-      <h3>Lead — building live</h3>
-      <div class="row" data-f="name"><div class="k">Name</div><div class="v empty">—</div></div>
-      <div class="row" data-f="project"><div class="k">Project</div><div class="v empty">—</div></div>
-      <div class="row" data-f="timeline"><div class="k">Timeline</div><div class="v empty">—</div></div>
-      <div class="row" data-f="budget"><div class="k">Budget</div><div class="v empty">—</div></div>
-      <div class="row" data-f="location"><div class="k">Location</div><div class="v empty">—</div></div>
-      <div class="row" data-f="contact"><div class="k">Contact</div><div class="v empty">—</div></div>
-      <div class="row" data-f="notes"><div class="k">Notes</div><div class="v empty">—</div></div>
-    </div>
-
-    <div class="card temp">
-      <div class="label">Lead temperature</div>
-      <div class="bars" id="bars"><span></span><span></span><span></span><span></span></div>
-      <div class="why" id="why">Nothing yet. Wren is still listening.</div>
-    </div>
-
-    <div id="bookslot"></div>
-
-    <div class="foot">
-      Every answer above was captured while the office was closed. Ada opens her phone at 8:00 AM to a booked consultation, not a voicemail.
-    </div>
-  </aside>
+  <div class="composer">
+    <label for="input" class="sr-only">Type your message to Wren</label>
+    <input id="input" placeholder="Type your answer…" autocomplete="off">
+    <button class="send" id="send" aria-label="Send message">↑</button>
+  </div>
+  <div class="foot">Wren is TBN Strategy's assistant · answers are reviewed by our team</div>
 </div>
 
 <script>
-/* ------------------------------------------------------------------
-   THE BROWSER SIDE
-   Notice what is NOT in this file: your API key, and your system
-   prompt. Both live on the server (api/chat.js). Anyone can read
-   this file by right-clicking "View Source" — so nothing valuable
-   goes in it. The browser just asks our own server a question.
-------------------------------------------------------------------- */
+/* -------------------------------------------------------------
+   The browser side. No API key here, no system prompt here —
+   both live safely on the Netlify function this talks to.
+------------------------------------------------------------- */
 
-const state = {
-  history: [],
-  lead: { name:null, project:null, timeline:null, budget:null, location:null, contact:null, notes:null },
-  busy: false
-};
+const ENDPOINT = "/.netlify/functions/chat";   // our own server on Netlify
+
+const state = { history: [], busy: false };
 
 const log   = document.getElementById('log');
 const chips = document.getElementById('chips');
 const input = document.getElementById('input');
 const send  = document.getElementById('send');
 
-/* ---------- rendering ---------- */
 function bubble(text, who){
   const el = document.createElement('div');
   el.className = 'msg ' + who;
@@ -302,39 +173,19 @@ function renderChips(list){
   chips.innerHTML = '';
   (list||[]).forEach(t=>{
     const b = document.createElement('button');
-    b.className = 'chip'; b.textContent = t;
+    b.className = 'chip'; b.type = 'button'; b.textContent = t;
     b.onclick = ()=> ask(t);
     chips.appendChild(b);
   });
 }
-function renderLead(){
-  document.querySelectorAll('.row').forEach(row=>{
-    const key = row.dataset.f;
-    const val = state.lead[key];
-    const cell = row.querySelector('.v');
-    const next = val || '—';
-    if(cell.textContent !== next){
-      cell.textContent = next;
-      cell.classList.toggle('empty', !val);
-      if(val){ row.classList.remove('filled'); void row.offsetWidth; row.classList.add('filled'); }
-    }
-  });
-}
-function renderTemp(score, why){
-  document.querySelectorAll('#bars span').forEach((b,i)=> b.classList.toggle('on', i < score));
-  document.getElementById('why').textContent = why || 'Nothing yet. Wren is still listening.';
-}
 function renderBooking(slot){
-  const box = document.getElementById('bookslot');
-  box.innerHTML = slot ? `
-    <div class="booked">
-      <span class="k">Consultation booked</span>
-      <b>${slot}</b>
-      <small>Added to Ada's calendar · confirmation sent to the customer</small>
-    </div>` : '';
+  const el = document.createElement('div');
+  el.className = 'booked';
+  el.innerHTML = `<span class="k">Consultation requested</span><b>${slot}</b>A TBN Strategy consultant will confirm by email.`;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
 }
 
-/* ---------- the API call ---------- */
 async function ask(text){
   if(state.busy || !text.trim()) return;
   state.busy = true; send.disabled = true;
@@ -345,53 +196,34 @@ async function ask(text){
   typing(true);
 
   try{
-    // our own server — not Anthropic. The key never touches the browser.
-    const res = await fetch("/api/chat", {
+    const res = await fetch(ENDPOINT, {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ messages: state.history })
     });
-    if(!res.ok) throw new Error("server said " + res.status);
-    const out = await res.json();   // already parsed for us, server-side
+    if(!res.ok) throw new Error("server " + res.status);
+    const out = await res.json();
 
     typing(false);
     bubble(out.reply, 'bot');
     state.history.push({ role:'assistant', content: JSON.stringify(out) });
 
-    // merge — never let a null overwrite something we already learned
-    for(const k in state.lead){
-      if(out.lead && out.lead[k]) state.lead[k] = out.lead[k];
-    }
-    renderLead();
-    renderTemp(out.booking ? 4 : (out.temperature||0), out.why);
-    renderBooking(out.booking);
+    if(out.booking) renderBooking(out.booking);
     renderChips(out.chips);
-
   }catch(err){
     typing(false);
-    bubble("That didn't send. Try once more — I'm still here.", 'bot');
+    bubble("Sorry — that didn't go through. Could you try sending it once more?", 'bot');
     console.error(err);
   }
 
   state.busy = false; send.disabled = false; input.focus();
 }
 
-/* ---------- wiring ---------- */
 send.onclick = ()=> ask(input.value);
 input.onkeydown = e => { if(e.key === 'Enter') ask(input.value); };
-document.getElementById('reset').onclick = ()=> location.reload();
 
-function boot(){
-  bubble("Hi — you've reached Hollis & Daughters after hours. I'm Wren, and I can get you on Ada's calendar right now. What are you thinking of remodeling?", 'bot');
-  renderChips(["My kitchen","A bathroom","Just looking around"]);
-  input.focus();
-}
-boot();
-
-/* the clock keeps the point sharp: this is happening while she sleeps */
-setInterval(()=>{
-  const now = new Date();
-  document.getElementById('clock').textContent =
-    now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-}, 1000);
+/* opening message */
+bubble("Hi! I'm Wren, TBN Strategy's assistant. We help 501(c)(3) nonprofits win grant funding. I can see if we're a good fit and get you on the calendar — mind if I ask a couple of quick questions?", 'bot');
+renderChips(["Sure, go ahead","Tell me about TBN first"]);
+input.focus();
 </script>
